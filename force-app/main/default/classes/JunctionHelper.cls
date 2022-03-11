@@ -40,12 +40,13 @@ public without sharing class JunctionHelper {
             schoolIdSet.add(st.School__c);
             schoolSetOfTeacherMap.put(st.School__c, new Set<Id>());
         }  
-        
-        //now query all the junction records where the teacher is active and the schools is in the set 
+
+        //now query all the junction records where the teacher is active and the schools are in the set 
         for(Teach_Multiple_School__c schoolTeacher : [SELECT School__c, Teacher__c, uniqueSTCombo__c
                                                         FROM Teach_Multiple_School__c
                                                         WHERE Teacher__r.Active__c = true AND School__c IN : schoolIdSet])
         {
+            CustomLog.log(CustomLog.LogLevel.INFO, 'JunctionHelper', 'Populate', 'Populate the map with the set of active teacher\'s ids for each school', null);
             //and populate the map with the set of active teacher's ids for each school
             schoolSetOfTeacherMap.get(schoolTeacher.School__c).add(schoolTeacher.Teacher__c);           
         }
